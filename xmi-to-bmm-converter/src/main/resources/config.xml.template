@@ -1,0 +1,10 @@
+<Configuration>
+    <!-- add XmiFile entries by order of dependency -->
+    <XmiFiles>
+        <XmiFile>
+            <FileName>associated_mdzip_filename.mdzip</FileName>
+            <FilePath>/path/to/xmi/file/myfile.xmi</FilePath>
+        </XmiFile>
+    </XmiFiles>
+    <OutputDirectory>/path/to/valid/output/directory/</OutputDirectory>
+</Configuration>
