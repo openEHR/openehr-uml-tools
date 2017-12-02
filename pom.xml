@@ -63,9 +63,9 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.openehr</groupId>
-            <artifactId>openehr-bmm</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.nedap.healthcare.archie</groupId>
+            <artifactId>bmm</artifactId>
+            <version>0.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

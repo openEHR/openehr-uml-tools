@@ -133,7 +133,7 @@ public class XmiToBmmConverter {
      */
     public void handleSchemaDocumentation(String umlModelName, PersistedBmmSchema schema) {
         schema.setSchemaRevision(new Date().toString()); //TODO Figure out what field to read in the XMI or whether this should belong in the config.xml file.
-        schema.setSchemaLifecycleState("dstu"); //TODO Probably move this to the config.xml file.
+        schema.setSchemaLifecycleState("ForComment"); //TODO Probably move this to the config.xml file.
         schema.setSchemaDescription(umlModelName + " - Schema generated from UML");
     }
 
@@ -229,6 +229,9 @@ public class XmiToBmmConverter {
         List<UmlProperty> properties = umlClass.getProperties();
         for (UmlProperty umlProperty : properties) {
             BmmMultiplicityInterval bmmCardinality = new BmmMultiplicityInterval();
+            if(umlProperty.getTypes() == null || umlProperty.getTypes().size() == 0) { //Attribute has not type
+                throw new RuntimeException("Property " + umlProperty.getName() + " in class " + bmmClass.getName() + " has no type. Please fix in model.");
+            }
             if (umlProperty.getLow() == null) {
                 bmmCardinality.setLow(1);
             } else {
