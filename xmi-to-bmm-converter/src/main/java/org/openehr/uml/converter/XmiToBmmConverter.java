@@ -133,7 +133,7 @@ public class XmiToBmmConverter {
      */
     public void handleSchemaDocumentation(String umlModelName, PersistedBmmSchema schema) {
         schema.setSchemaRevision(new Date().toString()); //TODO Figure out what field to read in the XMI or whether this should belong in the config.xml file.
-        schema.setSchemaLifecycleState("ForComment"); //TODO Probably move this to the config.xml file.
+        schema.setSchemaLifecycleState("Informative"); //TODO Probably move this to the config.xml file.
         schema.setSchemaDescription(umlModelName + " - Schema generated from UML");
     }
 
@@ -222,9 +222,6 @@ public class XmiToBmmConverter {
         }
         bmmClass.setName(umlClass.getName());
         bmmClass.setDocumentation(umlClass.getDocumentation());
-        if(bmmClass.getName().equalsIgnoreCase("")) {
-            System.out.println("Boolean");
-        }
         bmmPackage.addClass(umlClass.getName());
         List<UmlProperty> properties = umlClass.getProperties();
         for (UmlProperty umlProperty : properties) {
@@ -303,13 +300,24 @@ public class XmiToBmmConverter {
     private PersistedBmmGenericType handleParameterBindings(UmlProperty umlProperty) {
         PersistedBmmGenericType genericType = new PersistedBmmGenericType();
         UmlTemplateBinding binding = umlProperty.getFirstType().getTemplateBinding();
+        UmlTemplateSignature signature = binding.getSignature();
         String owningClass = binding.getSignature().getOwningClass().getName();
         genericType.setRootType(owningClass);
-        List<String> types = new ArrayList<>();
-        for(ParameterSubstitution sub : binding.getBindings()) {
-            types.add(sub.getActualParameter().getName());
+        String[] types = new String[binding.getBindings().size()];
+        if(binding.getBindings().size()> 1) {
+            System.out.println("HERE");
         }
-        genericType.setGenericParameters(types);
+        for(ParameterSubstitution sub : binding.getBindings()) {
+            int position = -1, count = 0;
+            for(UmlTemplateParameter param : signature.getParameters()) { //TODO Might want to make signature.parameters a linked hash map instead.
+                if(param.getName().equals(sub.getFormalParameter().getName())) {
+                    position = count;
+                }
+                count++;
+            }
+            types[position] = sub.getActualParameter().getName();
+        }
+        genericType.setGenericParameters(Arrays.asList(types));
         return genericType;
     }
 
